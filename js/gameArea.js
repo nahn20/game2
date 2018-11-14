@@ -5,7 +5,6 @@ function startGame(){
     player2 = new player();
     player1.initialSetup(1, "ninja");
     player2.initialSetup(2, "mage");
-    fireball.initialSetup();
     arrow.initialSetup();
     dragoon.initialSetup();
     worlds.new();
@@ -28,7 +27,6 @@ function loop(){
     ui.escape();
     player1.loop();
     player2.loop();
-    fireball.updatePos();
     arrow.updatePos();
     worlds.loop();
     enemies.loop();
@@ -40,7 +38,6 @@ function drawAll(){
     enemies.draw();
     player1.draw();
     player2.draw();
-    fireball.draw();
     arrow.draw();
     ui.draw();
 }

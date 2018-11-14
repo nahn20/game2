@@ -60,6 +60,8 @@ function player(){
     this.startSpecialAngle = 0;
     this.specialAngle = 0;
     this.shurikens = [];
+    //MAGE STUFF\\
+    this.fireballs = [];
     //RANGER STUFF\\
     this.bowImage = "shell";
     this.bowAnimationFrame = 0;
@@ -75,6 +77,9 @@ function player(){
         this.cooldowns();
         for(i = 0; i < this.shurikens.length; i++){
             this.shurikens[i].loop();
+        }
+        for(i = 0; i < this.fireballs.length; i++){
+            this.fireballs[i].loop();
         }
     }
     this.initialSetup = function(playerNumber, character){
@@ -118,29 +123,6 @@ function player(){
                         break;
                     case 2:
                         image.src = "images/player1/mageAnimationSheet.png";
-                        break;
-                }
-                basicCooldownImage.src = "images/attackIcons/fireball.png";
-                specialCooldownImage.src = "images/fireball.png";
-                utilityCooldownImage.src = "images/backgrounds/dragoon.png";
-                downCooldownImage.src = "images/backgrounds/fire.png";
-                this.cooldownNumberList[3] = 2000;
-                this.cooldownNumberList[4] = 300;
-                this.cooldownNumberList[6] = 0;
-                this.cooldownNumberList[999] = 10000;
-                this.maxMana = 100;
-                break;
-            case "archer":
-                this.modelWidth = 10;
-                this.modelHeight = 20;
-                this.width = 10;
-                this.height = 20;
-                switch(playerNumber){
-                    case 1:
-                        image.src = "images/player1/archer.png";
-                        break;
-                    case 2:
-                        image.src = "images/player1/archer.png";
                         break;
                 }
                 basicCooldownImage.src = "images/attackIcons/fireball.png";
@@ -326,14 +308,6 @@ function player(){
                     }
                 }
                 break;
-            case "archer":
-                if(this.direction == -1){
-                    this.headAnimationFrame = 0;
-                }
-                else{
-                    this.headAnimationFrame = 1;
-                }
-                break;
         }
     }
     this.draw = function(){
@@ -405,11 +379,6 @@ function player(){
             case "mage":
                 if(!keyMap[this.controls[5]] && !keyMap[this.controls[6]] && this.mana + 0.5 <= this.maxMana){
                     this.mana += 0.4;
-                }
-                break;
-            case "archer":
-                if(!keyMap[this.controls[5]] && !keyMap[this.controls[6]] && this.mana + 0.1 <= this.maxMana){
-                    this.mana += 0.1;
                 }
                 break;
         }
@@ -578,26 +547,6 @@ function player(){
                     lastUpMap[this.controls[2]] = gameArea.time + 200;
                 }
                 break;
-            case "archer":
-                if(keyMap[this.controls[0]]){
-                    if(gameArea.time - lastUseMap[this.controls[0]] >= 100 && gameArea.time - lastUpMap[this.controls[0]] <= 400 && gameArea.time - lastUseMap[this.controls[0]] <= 400){
-                        this.y -= 50;
-                        lastUseMap[this.controls[0]] = gameArea.time;
-                    }
-                    else if(this.onGround){
-                        this.jump();
-                        lastUseMap[this.controls[0]] = gameArea.time;
-                    }
-                }
-                if(keyMap[this.controls[1]] && gameArea.time - lastUseMap[this.controls[1]] >= 100 && gameArea.time - lastUpMap[this.controls[1]] <= 400 && gameArea.time - lastUseMap[this.controls[1]] <= 400){
-                    this.x -= 50;
-                    lastUseMap[this.controls[1]] = gameArea.time;
-                }
-                if(keyMap[this.controls[2]] && gameArea.time - lastUseMap[this.controls[2]] >= 100 && gameArea.time - lastUpMap[this.controls[2]] <= 400 && gameArea.time - lastUseMap[this.controls[2]] <= 400){
-                    this.x += 50;
-                    lastUseMap[this.controls[2]] = gameArea.time;
-                }
-                break;
             case "ranger":
                 if(keyMap[this.controls[0]]){
                     if(this.onGround){
@@ -647,15 +596,8 @@ function player(){
             case "mage":
                 if(keyMap[this.controls[4]] && gameArea.time - lastUseMap[this.controls[4]] >= this.cooldownNumberList[4] && this.state != "charging" && !keyMap[this.controls[5]] && !keyMap[this.controls[6]]){
                     lastUseMap[this.controls[4]] = gameArea.time;
-                    fireball.new(this.x+this.width/2, this.y + this.height/2, 6, 0, this.playerNumber, 3, 0.5, 10);
-                    fireball.release(this.playerNumber, this.direction);
-                }
-                break;
-            case "archer":
-                if(keyMap[this.controls[4]] && gameArea.time - lastUseMap[this.controls[4]] >= this.cooldownNumberList[4] && this.state != "charging"){
-                    lastUseMap[this.controls[4]] = gameArea.time;
-                    fireball.new(this.x+this.width/2, this.y + this.height/2, 6, 0, this.playerNumber, 3, 1, 3);
-                    fireball.release(this.playerNumber, this.direction);
+                    this.fireballs[this.fireballs.length] = new fireball(this.x+this.width/2, this.y + this.height/2, 6, 0, this.playerNumber, 3, 0.5, 10);
+                    this.fireballs[this.fireballs.length-1].release(this.direction);
                 }
                 break;
             case "ranger":
@@ -756,8 +698,8 @@ function player(){
                 if(keyMap[this.controls[5]] && gameArea.time - lastUseMap[this.controls[5]] >= 450 && this.state == "charging" && this.mana >= 10){ //Actual summon
                     lastUseMap[this.controls[5]] = gameArea.time;
                     this.mana -= 10;
-                    for(var i = 0; i < 50; i++){
-                        fireball.new(this.x+this.width/2, this.y - this.height/6, 3+5*Math.random(), 5*(Math.random()-0.5), this.playerNumber, 0, .01, 0);
+                    for(i = 0; i < 50; i++){
+                        this.fireballs[this.fireballs.length] = new fireball(this.x+this.width/2, this.y - this.height/6, 3+5*Math.random(), 5*(Math.random()-0.5), this.playerNumber, 0, .01, 0);
                     }
                 }
                 if(gameArea.time - lastUseMap[this.controls[999]] >= 50 && this.state == "falling"){
@@ -768,40 +710,9 @@ function player(){
                     this.state = "none";
                 }
                 if(!keyMap[this.controls[5]] && this.state == "charging"){
-                    fireball.release(this.playerNumber, this.direction);
-                    lastUseMap[this.controls[999]] = gameArea.time;
-                    this.bodyAnimationFrame = 2;
-                    this.state = "falling";
-                }
-                break;
-            case "archer":
-                if(keyMap[this.controls[5]] && gameArea.time - lastUseMap[this.controls[999]] >= this.cooldownNumberList[999] && this.state != "charging"){
-                    this.bodyAnimationFrame = 1;
-                    lastUseMap[this.controls[5]] = gameArea.time;
-                    this.state = "charging";
-                }
-                if(keyMap[this.controls[5]] && gameArea.time - lastUseMap[this.controls[5]] >= 200 && this.state == "charging"){
-                    this.bodyAnimationFrame = 2;
-                }
-                if(keyMap[this.controls[5]] && gameArea.time - lastUseMap[this.controls[5]] >= 400 && this.state == "charging"){ //Actual summon
-                    this.bodyAnimationFrame = 3;
-                }
-                if(keyMap[this.controls[5]] && gameArea.time - lastUseMap[this.controls[5]] >= 450 && this.state == "charging" && this.mana >= 10){ //Actual summon
-                    lastUseMap[this.controls[5]] = gameArea.time;
-                    this.mana -= 10;
-                    for(var i = 0; i < 50; i++){
-                        fireball.new(this.x+this.width/2, this.y + 5, 3+5*Math.random(), 5*(Math.random()-0.5), this.playerNumber, 0, .01, 0);
+                    for(i = 0; i < this.fireballs.length; i++){
+                        this.fireballs[i].release(this.direction);
                     }
-                }
-                if(gameArea.time - lastUseMap[this.controls[999]] >= 50 && this.state == "falling"){
-                    this.bodyAnimationFrame = 1;
-                }
-                if(gameArea.time - lastUseMap[this.controls[999]] >= 100 && this.state == "falling"){
-                    this.bodyAnimationFrame = 0;
-                    this.state = "none";
-                }
-                if(!keyMap[this.controls[5]] && this.state == "charging"){
-                    fireball.release(this.playerNumber, this.direction);
                     lastUseMap[this.controls[999]] = gameArea.time;
                     this.bodyAnimationFrame = 2;
                     this.state = "falling";
@@ -840,9 +751,9 @@ function player(){
             case "mage":
                 if(keyMap[this.controls[6]] && this.state != "charging" && this.mana >= 1){
                     this.mana -= 1;
-                    for(var i = 0; i < 5; i++){
-                        fireball.new(this.x+this.width/2, this.y + this.height/4, 3+5*Math.random(), 5*(Math.random()-0.5), this.playerNumber, 4, 0.002, 0);
-                        fireball.release(this.playerNumber, this.direction);
+                    for(i = 0; i < 5; i++){
+                        this.fireballs[this.fireballs.length] = new fireball(this.x+this.width/2, this.y + this.height/4, 3+5*Math.random(), 5*(Math.random()-0.5), this.playerNumber, 4, 0.002, 0);
+                        this.fireballs[this.fireballs.length-1].release(this.direction);
                     }
                     if(this.xvelocSum < 5 && this.direction == -1){
                         this.xaccelCtrl = -this.direction*0.2;
@@ -852,36 +763,6 @@ function player(){
                     }
                     else{
                         this.xaccelCtrl = -this.direction*0.01;
-                    }
-                }
-                else{
-                    if(this.xveloc > .5){
-                        this.xaccelCtrl = -.1;
-                    }
-                    else if(this.xveloc < -.5){
-                        this.xaccelCtrl = .1;
-                    }
-                    else{
-                        this.xveloc = 0;
-                        this.xaccelCtrl = 0;
-                    }
-                }
-                break;
-            case "archer":
-                if(keyMap[this.controls[6]] && this.state != "charging" && this.mana >= 1){
-                    this.mana -= 1;
-                    for(var i = 0; i < 5; i++){
-                        fireball.new(this.x+this.width/2, this.y + this.height/4, 3+5*Math.random(), 5*(Math.random()-0.5), this.playerNumber, 5, 0.002, 0);
-                        fireball.release(this.playerNumber, this.direction);
-                        if(this.xveloc < -1 && this.direction == -1){
-                            this.xaccelCtrl = -this.direction*0.5;
-                        }
-                        else if(this.xveloc > 1 && this.direction == 1){
-                            this.xaccelCtrl = -this.direction*0.5;
-                        }
-                        else{
-                            this.xaccelCtrl = -this.direction*0.05;
-                        }
                     }
                 }
                 else{
@@ -950,18 +831,8 @@ function player(){
             case "mage": // && this.state != "charging"
                 if(keyMap[this.controls[3]] && gameArea.time - lastUseMap[this.controls[3]] > this.cooldownNumberList[3]){
                     lastUseMap[this.controls[3]] = gameArea.time;
-                    for(i = 0; i < fireball.x.length; i++){
-                        if(fireball.owner[i] == this.playerNumber){
-                            fireball.explode(i);
-                        }
-                    }
-                }
-                break;
-            case "archer":
-                if(keyMap[this.controls[3]] && this.state != "charging" && gameArea.time - lastUseMap[this.controls[3]] > this.cooldownNumberList[3]){
-                    lastUseMap[this.controls[3]] = gameArea.time;
-                    for(i = 0; i < fireball.x.length; i++){
-                        fireball.explode(i);
+                    for(i = 0; i < this.fireballs.length; i++){
+                        this.fireballs[i].explode();
                     }
                 }
                 break;
@@ -1003,24 +874,6 @@ function player(){
                     this.cooldownCountList.push(3);
                 }
                 break;
-            case "archer":
-                if(gameArea.time - lastUseMap[this.controls[4]] < this.cooldownNumberList[4]){
-                    this.cooldownList.push(this.basicCooldown);
-                    this.cooldownCountList.push(4);
-                }
-                if(gameArea.time - lastUseMap[this.controls[999]] < this.cooldownNumberList[999]){
-                    this.cooldownList.push(this.specialCooldown);
-                    this.cooldownCountList.push(999);
-                }
-                if(keyMap[this.controls[6]]){
-                    this.cooldownList.push(this.utilityCooldown);
-                    this.cooldownCountList.push(6);
-                }
-                if(gameArea.time - lastUseMap[this.controls[3]] < this.cooldownNumberList[3]){
-                    this.cooldownList.push(this.downCooldown);
-                    this.cooldownCountList.push(3);
-                }
-                break;
         }
         for(i = 0; i < this.cooldownList.length; i++){
             var image = this.cooldownList[i];
@@ -1034,8 +887,6 @@ function player(){
                 case "mage":
                     y_displacement = 10;
                     break;
-                case "archer":
-                    y_displacement = 10;
             }
             switch(this.playerNumber){
                 case 1: 
@@ -1108,17 +959,6 @@ function player(){
                 gameArea.ctx.stroke();
                 gameArea.ctx.beginPath();
                 gameArea.ctx.fillStyle="yellow";
-                gameArea.ctx.fillRect(x, 6, (60/this.maxMana)*this.mana, 2);
-                gameArea.ctx.stroke();
-                gameArea.ctx.fillStyle="black";
-                break;
-            case "archer":
-                gameArea.ctx.beginPath();
-                gameArea.ctx.strokeStyle="gray";
-                gameArea.ctx.rect(x, 6, 60, 2);
-                gameArea.ctx.stroke();
-                gameArea.ctx.beginPath();
-                gameArea.ctx.fillStyle="white";
                 gameArea.ctx.fillRect(x, 6, (60/this.maxMana)*this.mana, 2);
                 gameArea.ctx.stroke();
                 gameArea.ctx.fillStyle="black";

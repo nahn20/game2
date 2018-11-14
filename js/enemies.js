@@ -412,6 +412,7 @@ var dragoon = {
     headAngle : [],
     headAngleVeloc : [],
     state : [],
+    fireballs : [],
     initialSetup : function(){
         var headImage = new Image();
         headImage.src = "images/enemies/dragoon/head.png";
@@ -462,6 +463,9 @@ var dragoon = {
                     //this.explode();
                 }
             }
+        }
+        for(i = 0; i < this.fireballs.length; i++){
+            this.fireballs[i].loop();
         }
 
     }, 
@@ -542,22 +546,20 @@ var dragoon = {
         }
     },
     flameBreath : function(){
-        for(var i = 0; i < this.health.length; i++){
+        for(i = 0; i < this.health.length; i++){
             if(this.headState[i] == "fireBreathing" && this.state[i] != "ded"){
-                for(var h = 0; h < 5; h++){
-                    fireball.new(this.headX[i]+this.headWidth[i]/2-20, this.headY[i] + this.headHeight[i]/2+10, Math.cos(-this.headAngle[i])*(3+1*Math.random()), Math.sin(-this.headAngle[i])*(2+1*Math.random()), 0, 4, 0.05, 0);
-                    //fireball.new(this.headX[i]+this.headWidth[i]/2-20, this.headY[i] + this.headHeight[i]/2+10, Math.cos(-this.headAngle[i])*3, Math.sin(-this.headAngle[i])*(2), 0, 4, 0.05, 0);
-                    fireball.release(0, this.headDirection[i]);
+                for(h = 0; h < 5; h++){
+                    this.fireballs[this.fireballs.length] = new fireball(this.headX[i]+this.headWidth[i]/2-20, this.headY[i] + this.headHeight[i]/2+10, Math.cos(-this.headAngle[i])*(3+1*Math.random()), Math.sin(-this.headAngle[i])*(2+1*Math.random()), 0, 4, 0.05, 0);
+                    //this.fireballs[this.fireballs.length] = new fireball(this.headX[i]+this.headWidth[i]/2-20, this.headY[i] + this.headHeight[i]/2+10, Math.cos(-this.headAngle[i])*3, Math.sin(-this.headAngle[i])*(2), 0, 4, 0.05, 0);
+                    this.fireballs[this.fireballs.length-1].release(this.headDirection[i]);
                 }
             }
         }
     }, 
     explode : function(){
         for(i = 0; i < this.health.length; i++){
-            for(h = 0; h < fireball.x.length; h++){
-                if(fireball.owner[h] == 0){
-                    fireball.explode(h);
-                }
+            for(h = 0; h < this.fireballs.length; h++){
+                this.fireballs[h].explode();
             }
             if(this.headState[i] == "fireBreathing"){
                 this.headState[i] = "none";
