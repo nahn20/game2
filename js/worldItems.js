@@ -1,3 +1,20 @@
+var collisionObjects = {
+    rectX : [0],
+    rectY : [0],
+    rectWidth : [0],
+    rectHeight : [0],
+    rectXVeloc : [0],
+    rectTransparency : [false],
+    
+    triX1 : [], //Bottom left
+    triY1 : [], //Bottom left
+    triX2 : [], //Bottom right
+    triY2 : [], //Bottom right
+    triX3 : [], //Middle
+    triY3 : [], //Middle
+    triXVeloc : [],
+    reflectivity : [],
+}
 var triangle = {
     x1 : [],
     y1 : [],
@@ -64,7 +81,7 @@ var block = {
     xveloc : [],
     yveloc : [],
     color : [],
-    transparency : [], //
+    transparency : [],
     arrayPosition : [],
     new : function(x, y, width, height, xveloc, yveloc, color, transparency){
         this.x.push(x);

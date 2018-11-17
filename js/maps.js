@@ -1,6 +1,7 @@
 var worlds = {
     new : function(){
         this.worldBuilder = document.getElementById("worldBuilderCheckbox").checked;
+        this.worldFileTestCheckBox = document.getElementById("worldFileTestCheckBox").checked;
         this.fire = document.getElementById("fireCheckBox").checked;
         this.mountain = document.getElementById("mountainCheckBox").checked;
         this.arena1 = document.getElementById("arena1CheckBox").checked;
@@ -15,6 +16,9 @@ var worlds = {
         this.flappyBird = document.getElementById("flappyCheckBox").checked;
         if(this.worldBuilder){
             worldBuilder.initialSetup();
+        }
+        if(this.worldFileTestCheckBox){
+            worldFileTestCheckBox.initialSetup();
         }
         if(this.fire){
             fire.initialSetup();
@@ -130,23 +134,6 @@ var worlds = {
     },
 }
 
-var collisionObjects = {
-    rectX : [0],
-    rectY : [0],
-    rectWidth : [0],
-    rectHeight : [0],
-    rectXVeloc : [0],
-    rectTransparency : [false],
-    
-    triX1 : [], //Bottom left
-    triY1 : [], //Bottom left
-    triX2 : [], //Bottom right
-    triY2 : [], //Bottom right
-    triX3 : [], //Middle
-    triY3 : [], //Middle
-    triXVeloc : [],
-    reflectivity : [],
-}
 var templateWorld = {
     initialSetup : function(){
         
@@ -168,6 +155,39 @@ var worldBuilder = {
     },
     draw : function(){
         
+    },
+}
+var worldFileTestCheckBox = {
+    initialSetup : function(){
+        worlds.flatGround = true;
+        var array = [];
+        for(y = 0; y < testMap.height; y++){
+            for(x = 0; x < testMap.width; x++){
+                //console.log(testMap.map.charAt(x+y*testMap.width));
+                var key = testMap.map.charAt(x+y*testMap.width);
+                if(key != " "){
+                    var width = testMap.blockSize;
+                    var xPos = x*width;
+                    var yPos = 140-width*testMap.height+y*width;
+                    switch(key){
+                        case "x":
+                            block.new(xPos, yPos, width, width, 0, 0, "black", false);
+                            break;
+                        case "1":
+                            player1.x = xPos; //Fix position things
+                            player1.y = yPos - player1.height;
+                            break;
+                        case "1":
+                            player2.x = xPos;
+                            player2.y = yPos;
+                            break;
+                        
+                    }
+
+
+                }
+            }
+        }
     },
 }
 var fire = {
