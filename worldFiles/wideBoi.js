@@ -1,0 +1,37 @@
+var wideBoi = {
+    map : 
+    '                                                                                                                                                                                                                                                '+
+    '                                                                                                                                                                                                                                                '+
+    '                                                                                                                                                                                                                                                '+
+    '                                                                                                                                                                                                                                                '+
+    '                                                                                                                                                                                                                                                '+
+    '                                                                                                                                                                                                                                                '+
+    '                                                                                                                                                                                                                                                '+
+    '                                                                                                                                                                                                                                                '+
+    '                                                                                                                                                                                                                                                '+
+    '                                                                                                                                                                                                                                                '+
+    '                                                                                                                                                                                                                                                '+
+    '                                                                                                                                                                                                                                                '+
+    '                                                                                                                                                                                                                                                '+
+    '                                                                                                                                                                                                                                                '+
+    '                                                                                                                                                                                                                                                '+
+    '                                                                                                                                                                                                                                                '+
+    '                                                                                                                                                                                                                                                '+
+    '                                                                                                                                                                                                                                                '+
+    '                                                                                                                                                                                                                                                '+
+    '                                                                                                                                                                                                                                                '+
+    '                                                                                                                                                                                                                                                '+
+    '                                                                                                                                                                                                                                                '+
+    '                               xxx                                                                                                                                                                                                              '+
+    '                              xxxxx                                                                                                                                                                                                             '+
+    '                                x                                                                                                                                                    xxxxxxxxxxxxx                                              '+
+    '                                x                                                                                                                                                    xxxxxxxxxxx  x                                             '+
+    '                       1        x                                                                                 xxxxx                                                              xxxxxxxxxxxxxxx                                    2       '+
+    '                                x                                                                                xxxxxxx                                                               x        x                                               '+
+    'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'+ 
+    'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'+ 
+    'n',
+    width : 240,
+    height : 30,
+    blockSize : 15,
+}

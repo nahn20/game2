@@ -2,6 +2,7 @@ var worlds = {
     new : function(){
         this.worldBuilder = document.getElementById("worldBuilderCheckbox").checked;
         this.worldFileTestCheckBox = document.getElementById("worldFileTestCheckBox").checked;
+        this.wideBoi = document.getElementById("wideBoiCheckBox").checked;
         this.fire = document.getElementById("fireCheckBox").checked;
         this.mountain = document.getElementById("mountainCheckBox").checked;
         this.arena1 = document.getElementById("arena1CheckBox").checked;
@@ -19,6 +20,9 @@ var worlds = {
         }
         if(this.worldFileTestCheckBox){
             worldFileTestCheckBox.initialSetup();
+        }
+        if(this.wideBoi){
+            wideBoiMap.initialSetup();
         }
         if(this.fire){
             fire.initialSetup();
@@ -162,6 +166,12 @@ var worldFileTestCheckBox = {
         worlds.flatGround = true;
         loadMap(testMap.map, testMap.width, testMap.height, testMap.blockSize);
     },
+}
+var wideBoiMap = {
+    initialSetup : function(){
+        worlds.flatGround = true;
+        loadMap(wideBoi.map, wideBoi.width, wideBoi.height, wideBoi.blockSize);
+    }
 }
 var fire = {
     initialSetup : function(){

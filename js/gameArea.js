@@ -59,10 +59,14 @@ var gameArea = {
     startTime : 0,
     mouseX : 0,
     mouseY : 0, 
-    leftx : 0,
-    lefty : 0,
-    rightx : 0,
-    righty : 0,
+    left : {
+        x : 0,
+        y : 0,
+    },
+    right : {
+        x : 0,
+        y : 0,
+    },
     splitScreen : false,
     backgroundImage : "shell",
     autoSize : true,
@@ -98,22 +102,22 @@ var gameArea = {
     },
     drawImage : function(image, animationFrameX, animationFrameY, modelWidth, modelHeight, x, y, width, height){ //Relative to frame
         if(this.splitScreen){ 
-            if(x + width > this.leftx && x < this.leftx + (this.canvas.width/2)/this.sizeMultiplier){
+            if(x + width > this.left.x && x < this.left.x + (this.canvas.width/2)/this.sizeMultiplier){
                 this.ctx.save();
                     this.ctx.beginPath();
                     this.ctx.rect(0, 0, this.canvas.width/2, this.canvas.height);
                     this.ctx.clip();
                     this.ctx.beginPath();
-                    this.ctx.drawImage(image, animationFrameX, animationFrameY, modelWidth, modelHeight, this.sizeMultiplier*(x - this.leftx), this.sizeMultiplier*(y - this.lefty)-(this.sizeMultiplier-1)*gameArea.canvas.height, this.sizeMultiplier*width, this.sizeMultiplier*height);
+                    this.ctx.drawImage(image, animationFrameX, animationFrameY, modelWidth, modelHeight, this.sizeMultiplier*(x - this.left.x), this.sizeMultiplier*(y - this.left.y)-(this.sizeMultiplier-1)*gameArea.canvas.height, this.sizeMultiplier*width, this.sizeMultiplier*height);
                 this.ctx.restore();
             }
-            if(x + width > this.rightx && x < this.rightx + (this.canvas.width/2)/this.sizeMultiplier){
+            if(x + width > this.right.x && x < this.right.x + (this.canvas.width/2)/this.sizeMultiplier){
                 this.ctx.save();
                     this.ctx.beginPath();
                     this.ctx.rect(this.canvas.width/2, 0, this.canvas.width/2, this.canvas.height);
                     this.ctx.clip();
                     this.ctx.beginPath();
-                    this.ctx.drawImage(image, animationFrameX, animationFrameY, modelWidth, modelHeight, this.canvas.width/2 + this.sizeMultiplier*(x - this.rightx), this.sizeMultiplier*(y - this.righty)-(this.sizeMultiplier-1)*gameArea.canvas.height, this.sizeMultiplier*width, this.sizeMultiplier*height);
+                    this.ctx.drawImage(image, animationFrameX, animationFrameY, modelWidth, modelHeight, this.canvas.width/2 + this.sizeMultiplier*(x - this.right.x), this.sizeMultiplier*(y - this.right.y)-(this.sizeMultiplier-1)*gameArea.canvas.height, this.sizeMultiplier*width, this.sizeMultiplier*height);
                 this.ctx.restore();
             }
         }
@@ -123,27 +127,27 @@ var gameArea = {
     },
     drawLine : function(xstart, ystart, xend, yend, color){ //Relative to frame
         if(this.splitScreen){
-            if(xend > this.leftx && xstart < this.leftx + (this.canvas.width/2)/this.sizeMultiplier){
+            if(xend > this.left.x && xstart < this.left.x + (this.canvas.width/2)/this.sizeMultiplier){
                 this.ctx.save();
                     this.ctx.beginPath();
                     this.ctx.rect(0, 0, this.canvas.width/2, this.canvas.height);
                     this.ctx.clip();
                     this.ctx.beginPath();
                     this.ctx.strokeStyle=color;
-                    this.ctx.moveTo(this.sizeMultiplier*(xstart - this.leftx), this.sizeMultiplier*(ystart - this.lefty)-(this.sizeMultiplier-1)*gameArea.canvas.height);
-                    this.ctx.lineTo(this.sizeMultiplier*(xend - this.leftx), this.sizeMultiplier*(yend - this.lefty)-(this.sizeMultiplier-1)*gameArea.canvas.height);
+                    this.ctx.moveTo(this.sizeMultiplier*(xstart - this.left.x), this.sizeMultiplier*(ystart - this.left.y)-(this.sizeMultiplier-1)*gameArea.canvas.height);
+                    this.ctx.lineTo(this.sizeMultiplier*(xend - this.left.x), this.sizeMultiplier*(yend - this.left.y)-(this.sizeMultiplier-1)*gameArea.canvas.height);
                     this.ctx.stroke();
                 this.ctx.restore();
             }
-            if(xend > this.rightx &&  xstart < this.rightx + (this.canvas.width/2)/this.sizeMultiplier){
+            if(xend > this.right.x &&  xstart < this.right.x + (this.canvas.width/2)/this.sizeMultiplier){
                 this.ctx.save();
                     this.ctx.beginPath();
                     this.ctx.rect(this.canvas.width/2, 0, this.canvas.width/2, this.canvas.height);
                     this.ctx.clip();
                     this.ctx.beginPath();
                     this.ctx.strokeStyle=color;
-                    this.ctx.moveTo(this.canvas.width/2 + this.sizeMultiplier*(xstart - this.rightx), this.sizeMultiplier*(ystart - this.righty)-(this.sizeMultiplier-1)*gameArea.canvas.height);
-                    this.ctx.lineTo(this.canvas.width/2 + this.sizeMultiplier*(xend - this.rightx), this.sizeMultiplier*(yend - this.righty)-(this.sizeMultiplier-1)*gameArea.canvas.height);
+                    this.ctx.moveTo(this.canvas.width/2 + this.sizeMultiplier*(xstart - this.right.x), this.sizeMultiplier*(ystart - this.right.y)-(this.sizeMultiplier-1)*gameArea.canvas.height);
+                    this.ctx.lineTo(this.canvas.width/2 + this.sizeMultiplier*(xend - this.right.x), this.sizeMultiplier*(yend - this.right.y)-(this.sizeMultiplier-1)*gameArea.canvas.height);
                     this.ctx.stroke();
                 this.ctx.restore();
             }
@@ -158,7 +162,7 @@ var gameArea = {
     },
     drawRect : function(x, y, width, height, color){
         if(this.splitScreen){
-            if(x + width > this.leftx && x < this.leftx + (this.canvas.width/2)/this.sizeMultiplier){
+            if(x + width > this.left.x && x < this.left.x + (this.canvas.width/2)/this.sizeMultiplier){
                 this.ctx.save();
                     this.ctx.beginPath();
                     this.ctx.rect(0, 0, this.canvas.width/2, this.canvas.height);
@@ -166,11 +170,11 @@ var gameArea = {
                 
                     this.ctx.beginPath();
                     this.ctx.strokeStyle=color;
-                    this.ctx.rect(this.sizeMultiplier*(x - this.leftx), this.sizeMultiplier*(y - this.lefty)-(this.sizeMultiplier-1)*gameArea.canvas.height, this.sizeMultiplier*width, this.sizeMultiplier*height);
+                    this.ctx.rect(this.sizeMultiplier*(x - this.left.x), this.sizeMultiplier*(y - this.left.y)-(this.sizeMultiplier-1)*gameArea.canvas.height, this.sizeMultiplier*width, this.sizeMultiplier*height);
                     this.ctx.stroke();
                 this.ctx.restore();
             }
-            if(x + width > this.rightx && x < this.rightx + (this.canvas.width/2)/this.sizeMultiplier){
+            if(x + width > this.right.x && x < this.right.x + (this.canvas.width/2)/this.sizeMultiplier){
                 this.ctx.save();
                     this.ctx.beginPath();
                     this.ctx.rect(this.canvas.width/2, 0, this.canvas.width/2, this.canvas.height);
@@ -178,7 +182,7 @@ var gameArea = {
                 
                     this.ctx.beginPath();
                     this.ctx.strokeStyle=color;
-                    this.ctx.rect(this.canvas.width/2 + this.sizeMultiplier*(x - this.rightx), this.sizeMultiplier*(y - this.righty)-(this.sizeMultiplier-1)*gameArea.canvas.height, this.sizeMultiplier*width, this.sizeMultiplier*height);
+                    this.ctx.rect(this.canvas.width/2 + this.sizeMultiplier*(x - this.right.x), this.sizeMultiplier*(y - this.right.y)-(this.sizeMultiplier-1)*gameArea.canvas.height, this.sizeMultiplier*width, this.sizeMultiplier*height);
                     this.ctx.stroke();
                 this.ctx.restore();
             }
@@ -192,31 +196,31 @@ var gameArea = {
     },
     drawTriangle : function(x1, y1, x2, y2, x3, y3, color){ //Bottom left is x1, bottom right is x2, middle is x3
         if(this.splitScreen){
-            if(x2 > this.leftx && x1 < this.leftx + (this.canvas.width/2)/this.sizeMultiplier){
+            if(x2 > this.left.x && x1 < this.left.x + (this.canvas.width/2)/this.sizeMultiplier){
                 this.ctx.save();
                     this.ctx.beginPath();
                     this.ctx.rect(0, 0, this.canvas.width/2, this.canvas.height);
                     this.ctx.clip();
                 
                     this.ctx.beginPath();
-                    this.ctx.moveTo(this.sizeMultiplier*(x1-this.leftx), this.sizeMultiplier*(y1-this.lefty)-(this.sizeMultiplier-1)*gameArea.canvas.height);
-                    this.ctx.lineTo(this.sizeMultiplier*(x2-this.leftx), this.sizeMultiplier*(y2-this.lefty)-(this.sizeMultiplier-1)*gameArea.canvas.height);
-                    this.ctx.lineTo(this.sizeMultiplier*(x3-this.leftx), this.sizeMultiplier*(y3-this.lefty)-(this.sizeMultiplier-1)*gameArea.canvas.height);
+                    this.ctx.moveTo(this.sizeMultiplier*(x1-this.left.x), this.sizeMultiplier*(y1-this.left.y)-(this.sizeMultiplier-1)*gameArea.canvas.height);
+                    this.ctx.lineTo(this.sizeMultiplier*(x2-this.left.x), this.sizeMultiplier*(y2-this.left.y)-(this.sizeMultiplier-1)*gameArea.canvas.height);
+                    this.ctx.lineTo(this.sizeMultiplier*(x3-this.left.x), this.sizeMultiplier*(y3-this.left.y)-(this.sizeMultiplier-1)*gameArea.canvas.height);
                     this.ctx.fillStyle = color;
                     this.ctx.fill();
 
                 this.ctx.restore();
             }
-            if(x2 > this.rightx && x1 < this.rightx + (this.canvas.width/2)/this.sizeMultiplier){
+            if(x2 > this.right.x && x1 < this.right.x + (this.canvas.width/2)/this.sizeMultiplier){
                 this.ctx.save();
                     this.ctx.beginPath();
                     this.ctx.rect(this.canvas.width/2, 0, this.canvas.width/2, this.canvas.height);
                     this.ctx.clip();
                 
                     this.ctx.beginPath();
-                    this.ctx.moveTo(this.canvas.width/2 + this.sizeMultiplier*(x1-this.rightx), this.sizeMultiplier*(y1-this.righty)-(this.sizeMultiplier-1)*gameArea.canvas.height);
-                    this.ctx.lineTo(this.canvas.width/2 + this.sizeMultiplier*(x2-this.rightx), this.sizeMultiplier*(y2-this.righty)-(this.sizeMultiplier-1)*gameArea.canvas.height);
-                    this.ctx.lineTo(this.canvas.width/2 + this.sizeMultiplier*(x3-this.rightx), this.sizeMultiplier*(y3-this.righty)-(this.sizeMultiplier-1)*gameArea.canvas.height);
+                    this.ctx.moveTo(this.canvas.width/2 + this.sizeMultiplier*(x1-this.right.x), this.sizeMultiplier*(y1-this.right.y)-(this.sizeMultiplier-1)*gameArea.canvas.height);
+                    this.ctx.lineTo(this.canvas.width/2 + this.sizeMultiplier*(x2-this.right.x), this.sizeMultiplier*(y2-this.right.y)-(this.sizeMultiplier-1)*gameArea.canvas.height);
+                    this.ctx.lineTo(this.canvas.width/2 + this.sizeMultiplier*(x3-this.right.x), this.sizeMultiplier*(y3-this.right.y)-(this.sizeMultiplier-1)*gameArea.canvas.height);
                     this.ctx.fillStyle = color;
                     this.ctx.fill();
                 this.ctx.restore();
@@ -234,24 +238,24 @@ var gameArea = {
     },
     drawBlock : function(x, y, width, height, color){
         if(this.splitScreen){
-            if(x + width > this.leftx && x < this.leftx + (this.canvas.width/2)/this.sizeMultiplier){
+            if(x + width > this.left.x && x < this.left.x + (this.canvas.width/2)/this.sizeMultiplier){
                 this.ctx.save();
                     this.ctx.beginPath();
                     this.ctx.rect(0, 0, this.canvas.width/2, this.canvas.height);
                     this.ctx.clip();
                 
                     this.ctx.fillStyle = color;
-                    this.ctx.fillRect(this.sizeMultiplier*(x - this.leftx), this.sizeMultiplier*(y - this.lefty)-(this.sizeMultiplier-1)*gameArea.canvas.height, this.sizeMultiplier*width, this.sizeMultiplier*height);
+                    this.ctx.fillRect(this.sizeMultiplier*(x - this.left.x), this.sizeMultiplier*(y - this.left.y)-(this.sizeMultiplier-1)*gameArea.canvas.height, this.sizeMultiplier*width, this.sizeMultiplier*height);
                 this.ctx.restore();
             }
-            if(x + width > this.rightx && x < this.rightx + (this.canvas.width/2)/this.sizeMultiplier){
+            if(x + width > this.right.x && x < this.right.x + (this.canvas.width/2)/this.sizeMultiplier){
                 this.ctx.save();
                     this.ctx.beginPath();
                     this.ctx.rect(this.canvas.width/2, 0, this.canvas.width/2, this.canvas.height);
                     this.ctx.clip();
                 
                     this.ctx.fillStyle = color;
-                    this.ctx.fillRect(this.canvas.width/2 + this.sizeMultiplier*(x - this.rightx), this.sizeMultiplier*(y - this.righty)-(this.sizeMultiplier-1)*gameArea.canvas.height, this.sizeMultiplier*width, this.sizeMultiplier*height);
+                    this.ctx.fillRect(this.canvas.width/2 + this.sizeMultiplier*(x - this.right.x), this.sizeMultiplier*(y - this.right.y)-(this.sizeMultiplier-1)*gameArea.canvas.height, this.sizeMultiplier*width, this.sizeMultiplier*height);
                 this.ctx.restore();
             }
         }
@@ -262,25 +266,25 @@ var gameArea = {
     },
     drawCirc : function(x, y, radius, color){
         if(this.splitScreen){
-            if(x + radius > this.leftx && x - radius < this.leftx + (this.canvas.width/2)/this.sizeMultiplier){
+            if(x + radius > this.left.x && x - radius < this.left.x + (this.canvas.width/2)/this.sizeMultiplier){
                 this.ctx.save();
                     this.ctx.beginPath();
                     this.ctx.rect(0, 0, this.canvas.width/2, this.canvas.height);
                     this.ctx.clip();
                     this.ctx.beginPath();
                     this.ctx.strokeStyle=color;
-                    this.ctx.arc(this.sizeMultiplier*(x - this.leftx), this.sizeMultiplier*(y - this.lefty)-(this.sizeMultiplier-1)*gameArea.canvas.height, this.sizeMultiplier*radius, 0, 2*Math.PI);
+                    this.ctx.arc(this.sizeMultiplier*(x - this.left.x), this.sizeMultiplier*(y - this.left.y)-(this.sizeMultiplier-1)*gameArea.canvas.height, this.sizeMultiplier*radius, 0, 2*Math.PI);
                     this.ctx.stroke();
                 this.ctx.restore();
             }
-            if(x + radius > this.rightx && x - radius < this.rightx + (this.canvas.width/2)/this.sizeMultiplier){
+            if(x + radius > this.right.x && x - radius < this.right.x + (this.canvas.width/2)/this.sizeMultiplier){
                 this.ctx.save();
                     this.ctx.beginPath();
                     this.ctx.rect(this.canvas.width/2, 0, this.canvas.width/2, this.canvas.height);
                     this.ctx.clip();
                     this.ctx.beginPath();
                     this.ctx.strokeStyle=color;
-                    this.ctx.arc(this.canvas.width/2 + this.sizeMultiplier*(x - this.rightx), this.sizeMultiplier*(y - this.righty)-(this.sizeMultiplier-1)*gameArea.canvas.height, this.sizeMultiplier*radius, 0, 2*Math.PI);
+                    this.ctx.arc(this.canvas.width/2 + this.sizeMultiplier*(x - this.right.x), this.sizeMultiplier*(y - this.right.y)-(this.sizeMultiplier-1)*gameArea.canvas.height, this.sizeMultiplier*radius, 0, 2*Math.PI);
                     this.ctx.stroke();
                 this.ctx.restore();
             }
@@ -306,12 +310,12 @@ var gameArea = {
             else{
                 this.splitScreen = true; //Don't forget to set it to false later
                 if(player1.x < player2.x){
-                    this.leftx = player1.x - this.canvas.width/(4*this.sizeMultiplier);
-                    this.rightx = player2.x  - this.canvas.width/(4*this.sizeMultiplier);
+                    this.left.x = player1.x - this.canvas.width/(4*this.sizeMultiplier);
+                    this.right.x = player2.x  - this.canvas.width/(4*this.sizeMultiplier);
                 }
                 else{
-                    this.leftx = player2.x - this.canvas.width/(4*this.sizeMultiplier);
-                    this.rightx = player1.x  - this.canvas.width/(4*this.sizeMultiplier);
+                    this.left.x = player2.x - this.canvas.width/(4*this.sizeMultiplier);
+                    this.right.x = player1.x  - this.canvas.width/(4*this.sizeMultiplier);
                 }
                 this.x = ((player1.x + player1.width/2 + player2.x + player2.width/2)/2 - this.canvas.width/2);
             }
