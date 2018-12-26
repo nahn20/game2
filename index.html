@@ -26,7 +26,7 @@
             <br>
             World File Test: <input type="checkbox" id="worldFileTestCheckBox">
             <br>
-            Wide Boi: <input type="checkbox" id="wideBoiCheckBox" checked>
+            Wide Boi: <input type="checkbox" id="wideBoiCheckBox">
             <br>
             Fire: <input type="checkbox" id="fireCheckBox">
             <br>
@@ -57,11 +57,16 @@
             Flappy World: <input type="checkbox" id="flappyCheckBox" onclick="flappyCheck()">
             <br>TODO:
             <li>
+                <ul class = "highlight">Add size multipliers to independently work on right and left</ul>
+                <ul>Modify all other gameArea functions to look like drawimage</ul>
+                <ul>Add hold controls with q/e and u/o and arrow keys to modify sizemultiplier and vertical shift for left and right</ul>
+                <ul>Make camera follow more smooth (for big together screen and independents) (btw it looks better if you center the screen around their feet)</ul>
                 <ul>Fix collision<br><img src="images/todo/collision.png" width="480px" height="300px"></ul>
+                <ul>Shurikens don't work on wideBoi with block size of greater than 4ish</ul>
                 <ul>Add triangle collision</ul>
                 <ul>Add fireball reflectiness maybe?</ul>
                 <ul>Add archer</ul>
-                <ul class="highlight">>Add y component to camera</ul>
+                <ul>Ask DGries how "if(condition1 == true && condition2 == true)" works. Does it evaluate condition2 in js? If so, look at gameArea.onScreen and rewrite.</ul>
             </li>
         </div>
     </body>

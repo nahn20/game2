@@ -33,5 +33,5 @@ var wideBoi = {
     'n',
     width : 240,
     height : 30,
-    blockSize : 15,
+    blockSize : 4,
 }

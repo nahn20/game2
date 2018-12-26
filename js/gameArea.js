@@ -45,6 +45,7 @@ var gameArea = {
     canvas : document.createElement("canvas"),
     x : 0, 
     y : 0,
+    verticalShift : 0,
     xveloc : 0,
     yveloc : 0,
     xaccel : 0,
@@ -62,10 +63,14 @@ var gameArea = {
     left : {
         x : 0,
         y : 0,
+        verticalShift : 0,
+        sizeMultiplier : 0,
     },
     right : {
         x : 0,
         y : 0,
+        verticalShift : 0,
+        sizeMultiplier : 0,
     },
     splitScreen : false,
     backgroundImage : "shell",
@@ -79,6 +84,8 @@ var gameArea = {
         this.backgroundImage = backgroundImage;
         this.updateTime();
         this.startTime = this.time;
+        this.left.verticalShift = this.canvas.height/2;
+        this.right.verticalShift = this.canvas.height/2;
     },
     loop : function(){
         this.canvas.style.backgroundColor = colors.white;
@@ -100,33 +107,79 @@ var gameArea = {
     pvpToggle : function(){
         this.pvp = toggleMap[49]; //t
     },
-    drawImage : function(image, animationFrameX, animationFrameY, modelWidth, modelHeight, x, y, width, height){ //Relative to frame
-        if(this.splitScreen){ 
-            if(x + width > this.left.x && x < this.left.x + (this.canvas.width/2)/this.sizeMultiplier){
-                this.ctx.save();
-                    this.ctx.beginPath();
-                    this.ctx.rect(0, 0, this.canvas.width/2, this.canvas.height);
-                    this.ctx.clip();
-                    this.ctx.beginPath();
-                    this.ctx.drawImage(image, animationFrameX, animationFrameY, modelWidth, modelHeight, this.sizeMultiplier*(x - this.left.x), this.sizeMultiplier*(y - this.left.y)-(this.sizeMultiplier-1)*gameArea.canvas.height, this.sizeMultiplier*width, this.sizeMultiplier*height);
-                this.ctx.restore();
-            }
-            if(x + width > this.right.x && x < this.right.x + (this.canvas.width/2)/this.sizeMultiplier){
-                this.ctx.save();
-                    this.ctx.beginPath();
-                    this.ctx.rect(this.canvas.width/2, 0, this.canvas.width/2, this.canvas.height);
-                    this.ctx.clip();
-                    this.ctx.beginPath();
-                    this.ctx.drawImage(image, animationFrameX, animationFrameY, modelWidth, modelHeight, this.canvas.width/2 + this.sizeMultiplier*(x - this.right.x), this.sizeMultiplier*(y - this.right.y)-(this.sizeMultiplier-1)*gameArea.canvas.height, this.sizeMultiplier*width, this.sizeMultiplier*height);
-                this.ctx.restore();
-            }
+    onScreen : function(x, y, width, height){
+        var returnVar = {
+            full : false,
+            left : false,
+            right : false,
         }
-        else{
-            this.ctx.drawImage(image, animationFrameX, animationFrameY, modelWidth, modelHeight, this.sizeMultiplier*(x - this.x), this.sizeMultiplier*(y - this.y)-(this.sizeMultiplier-1)*gameArea.canvas.height, this.sizeMultiplier*width, this.sizeMultiplier*height);
+        if(this.splitScreen
+        && x + width > this.left.x && x < this.left.x + (this.canvas.width/2)/this.sizeMultiplier
+        && y + height > this.left.y - (this.canvas.height/2)/this.sizeMultiplier && y < this.left.y + (this.canvas.height/2)/this.sizeMultiplier){
+            returnVar.left = true;
+        }
+        if(this.splitScreen
+        && x + width > this.right.x && x < this.right.x + (this.canvas.width/2)/this.sizeMultiplier
+        && y + height > this.right.y - (this.canvas.height/2)/this.sizeMultiplier && y < this.right.y + (this.canvas.height/2)/this.sizeMultiplier){
+            returnVar.right = true;
+        }
+        if(!this.splitScreen
+        && x + width > this.x && x < this.x + this.canvas.width/this.sizeMultiplier){
+            returnVar.full = true;
+        }
+        return returnVar;
+    },
+    drawImage : function(image, animationFrameX, animationFrameY, modelWidth, modelHeight, x, y, width, height){ //Relative to frame
+        var onScreen = this.onScreen(x, y, width, height);
+        if(onScreen.left){
+            this.ctx.save();
+                this.ctx.beginPath();
+                this.ctx.rect(0, 0, this.canvas.width/2, this.canvas.height);
+                this.ctx.clip();
+                this.ctx.beginPath();
+                this.ctx.drawImage(image, animationFrameX, animationFrameY, modelWidth, modelHeight, this.sizeMultiplier*(x - this.left.x), this.sizeMultiplier*(y - this.left.y)+ this.left.verticalShift, this.sizeMultiplier*width, this.sizeMultiplier*height);
+            this.ctx.restore();
+        }
+        if(onScreen.right){
+            this.ctx.save();
+                this.ctx.beginPath();
+                this.ctx.rect(this.canvas.width/2, 0, this.canvas.width/2, this.canvas.height);
+                this.ctx.clip();
+                this.ctx.beginPath();
+                this.ctx.drawImage(image, animationFrameX, animationFrameY, modelWidth, modelHeight, this.canvas.width/2 + this.sizeMultiplier*(x - this.right.x), this.sizeMultiplier*(y - this.right.y)+ this.right.verticalShift, this.sizeMultiplier*width, this.sizeMultiplier*height);
+            this.ctx.restore();
+        }
+        if(onScreen.full){
+            this.ctx.drawImage(image, animationFrameX, animationFrameY, modelWidth, modelHeight, this.sizeMultiplier*(x - this.x), this.sizeMultiplier*(y - this.y)+ this.verticalShift, this.sizeMultiplier*width, this.sizeMultiplier*height);
         }
     },
     drawLine : function(xstart, ystart, xend, yend, color){ //Relative to frame
         if(this.splitScreen){
+            switch(this.onScreen(xstart, ystart, xend-xstart, yend-ystart)){
+                case "left":
+                    this.ctx.save();
+                        this.ctx.beginPath();
+                        this.ctx.rect(0, 0, this.canvas.width/2, this.canvas.height);
+                        this.ctx.clip();
+                        this.ctx.beginPath();
+                        this.ctx.strokeStyle=color;
+                        this.ctx.moveTo(this.sizeMultiplier*(xstart - this.left.x), this.sizeMultiplier*(ystart - this.left.y) + this.left.verticalShift);
+                        this.ctx.lineTo(this.sizeMultiplier*(xend - this.left.x), this.sizeMultiplier*(yend - this.left.y) + this.left.verticalShift);
+                        this.ctx.stroke();
+                    this.ctx.restore();
+                    break;
+                case "right":
+                    this.ctx.save();
+                        this.ctx.beginPath();
+                        this.ctx.rect(this.canvas.width/2, 0, this.canvas.width/2, this.canvas.height);
+                        this.ctx.clip();
+                        this.ctx.beginPath();
+                        this.ctx.strokeStyle=color;
+                        this.ctx.moveTo(this.canvas.width/2 + this.sizeMultiplier*(xstart - this.right.x), this.sizeMultiplier*(ystart - this.right.y) + this.right.verticalShift);
+                        this.ctx.lineTo(this.canvas.width/2 + this.sizeMultiplier*(xend - this.right.x), this.sizeMultiplier*(yend - this.right.y) + this.right.verticalShift);
+                        this.ctx.stroke();
+                    this.ctx.restore();
+            }
             if(xend > this.left.x && xstart < this.left.x + (this.canvas.width/2)/this.sizeMultiplier){
                 this.ctx.save();
                     this.ctx.beginPath();
@@ -134,8 +187,8 @@ var gameArea = {
                     this.ctx.clip();
                     this.ctx.beginPath();
                     this.ctx.strokeStyle=color;
-                    this.ctx.moveTo(this.sizeMultiplier*(xstart - this.left.x), this.sizeMultiplier*(ystart - this.left.y)-(this.sizeMultiplier-1)*gameArea.canvas.height);
-                    this.ctx.lineTo(this.sizeMultiplier*(xend - this.left.x), this.sizeMultiplier*(yend - this.left.y)-(this.sizeMultiplier-1)*gameArea.canvas.height);
+                    this.ctx.moveTo(this.sizeMultiplier*(xstart - this.left.x), this.sizeMultiplier*(ystart - this.left.y) + this.left.verticalShift);
+                    this.ctx.lineTo(this.sizeMultiplier*(xend - this.left.x), this.sizeMultiplier*(yend - this.left.y) + this.left.verticalShift);
                     this.ctx.stroke();
                 this.ctx.restore();
             }
@@ -146,8 +199,8 @@ var gameArea = {
                     this.ctx.clip();
                     this.ctx.beginPath();
                     this.ctx.strokeStyle=color;
-                    this.ctx.moveTo(this.canvas.width/2 + this.sizeMultiplier*(xstart - this.right.x), this.sizeMultiplier*(ystart - this.right.y)-(this.sizeMultiplier-1)*gameArea.canvas.height);
-                    this.ctx.lineTo(this.canvas.width/2 + this.sizeMultiplier*(xend - this.right.x), this.sizeMultiplier*(yend - this.right.y)-(this.sizeMultiplier-1)*gameArea.canvas.height);
+                    this.ctx.moveTo(this.canvas.width/2 + this.sizeMultiplier*(xstart - this.right.x), this.sizeMultiplier*(ystart - this.right.y)+ this.right.verticalShift);
+                    this.ctx.lineTo(this.canvas.width/2 + this.sizeMultiplier*(xend - this.right.x), this.sizeMultiplier*(yend - this.right.y) + this.right.verticalShift);
                     this.ctx.stroke();
                 this.ctx.restore();
             }
@@ -155,8 +208,8 @@ var gameArea = {
         else{
             this.ctx.beginPath();
             this.ctx.strokeStyle=color;
-            this.ctx.moveTo(this.sizeMultiplier*(xstart - this.x), this.sizeMultiplier*(ystart - this.y)-(this.sizeMultiplier-1)*gameArea.canvas.height);
-            this.ctx.lineTo(this.sizeMultiplier*(xend - this.x), this.sizeMultiplier*(yend - this.y)-(this.sizeMultiplier-1)*gameArea.canvas.height);
+            this.ctx.moveTo(this.sizeMultiplier*(xstart - this.x), this.sizeMultiplier*(ystart - this.y)+ this.verticalShift);
+            this.ctx.lineTo(this.sizeMultiplier*(xend - this.x), this.sizeMultiplier*(yend - this.y)+ this.verticalShift);
             this.ctx.stroke();
         }
     },
@@ -170,7 +223,7 @@ var gameArea = {
                 
                     this.ctx.beginPath();
                     this.ctx.strokeStyle=color;
-                    this.ctx.rect(this.sizeMultiplier*(x - this.left.x), this.sizeMultiplier*(y - this.left.y)-(this.sizeMultiplier-1)*gameArea.canvas.height, this.sizeMultiplier*width, this.sizeMultiplier*height);
+                    this.ctx.rect(this.sizeMultiplier*(x - this.left.x), this.sizeMultiplier*(y - this.left.y) + this.left.verticalShift, this.sizeMultiplier*width, this.sizeMultiplier*height);
                     this.ctx.stroke();
                 this.ctx.restore();
             }
@@ -182,7 +235,7 @@ var gameArea = {
                 
                     this.ctx.beginPath();
                     this.ctx.strokeStyle=color;
-                    this.ctx.rect(this.canvas.width/2 + this.sizeMultiplier*(x - this.right.x), this.sizeMultiplier*(y - this.right.y)-(this.sizeMultiplier-1)*gameArea.canvas.height, this.sizeMultiplier*width, this.sizeMultiplier*height);
+                    this.ctx.rect(this.canvas.width/2 + this.sizeMultiplier*(x - this.right.x), this.sizeMultiplier*(y - this.right.y) + this.right.verticalShift, this.sizeMultiplier*width, this.sizeMultiplier*height);
                     this.ctx.stroke();
                 this.ctx.restore();
             }
@@ -190,7 +243,7 @@ var gameArea = {
         else{
             this.ctx.beginPath();
             this.ctx.strokeStyle=color;
-            this.ctx.rect(this.sizeMultiplier*(x - this.x), this.sizeMultiplier*(y - this.y)-(this.sizeMultiplier-1)*gameArea.canvas.height, this.sizeMultiplier*width, this.sizeMultiplier*height);
+            this.ctx.rect(this.sizeMultiplier*(x - this.x), this.sizeMultiplier*(y - this.y)+ this.verticalShift, this.sizeMultiplier*width, this.sizeMultiplier*height);
             this.ctx.stroke();
         }
     },
@@ -203,9 +256,9 @@ var gameArea = {
                     this.ctx.clip();
                 
                     this.ctx.beginPath();
-                    this.ctx.moveTo(this.sizeMultiplier*(x1-this.left.x), this.sizeMultiplier*(y1-this.left.y)-(this.sizeMultiplier-1)*gameArea.canvas.height);
-                    this.ctx.lineTo(this.sizeMultiplier*(x2-this.left.x), this.sizeMultiplier*(y2-this.left.y)-(this.sizeMultiplier-1)*gameArea.canvas.height);
-                    this.ctx.lineTo(this.sizeMultiplier*(x3-this.left.x), this.sizeMultiplier*(y3-this.left.y)-(this.sizeMultiplier-1)*gameArea.canvas.height);
+                    this.ctx.moveTo(this.sizeMultiplier*(x1-this.left.x), this.sizeMultiplier*(y1-this.left.y)+ this.left.verticalShift);
+                    this.ctx.lineTo(this.sizeMultiplier*(x2-this.left.x), this.sizeMultiplier*(y2-this.left.y)+ this.left.verticalShift);
+                    this.ctx.lineTo(this.sizeMultiplier*(x3-this.left.x), this.sizeMultiplier*(y3-this.left.y)+ this.left.verticalShift);
                     this.ctx.fillStyle = color;
                     this.ctx.fill();
 
@@ -218,9 +271,9 @@ var gameArea = {
                     this.ctx.clip();
                 
                     this.ctx.beginPath();
-                    this.ctx.moveTo(this.canvas.width/2 + this.sizeMultiplier*(x1-this.right.x), this.sizeMultiplier*(y1-this.right.y)-(this.sizeMultiplier-1)*gameArea.canvas.height);
-                    this.ctx.lineTo(this.canvas.width/2 + this.sizeMultiplier*(x2-this.right.x), this.sizeMultiplier*(y2-this.right.y)-(this.sizeMultiplier-1)*gameArea.canvas.height);
-                    this.ctx.lineTo(this.canvas.width/2 + this.sizeMultiplier*(x3-this.right.x), this.sizeMultiplier*(y3-this.right.y)-(this.sizeMultiplier-1)*gameArea.canvas.height);
+                    this.ctx.moveTo(this.canvas.width/2 + this.sizeMultiplier*(x1-this.right.x), this.sizeMultiplier*(y1-this.right.y)+ this.right.verticalShift);
+                    this.ctx.lineTo(this.canvas.width/2 + this.sizeMultiplier*(x2-this.right.x), this.sizeMultiplier*(y2-this.right.y)+ this.right.verticalShift);
+                    this.ctx.lineTo(this.canvas.width/2 + this.sizeMultiplier*(x3-this.right.x), this.sizeMultiplier*(y3-this.right.y)+ this.right.verticalShift);
                     this.ctx.fillStyle = color;
                     this.ctx.fill();
                 this.ctx.restore();
@@ -229,9 +282,9 @@ var gameArea = {
         else{
             this.ctx.beginPath();
             this.ctx.beginPath();
-            this.ctx.moveTo(this.sizeMultiplier*(x1-this.x), this.sizeMultiplier*(y1-this.y)-(this.sizeMultiplier-1)*gameArea.canvas.height);
-            this.ctx.lineTo(this.sizeMultiplier*(x2-this.x), this.sizeMultiplier*(y2-this.y)-(this.sizeMultiplier-1)*gameArea.canvas.height);
-            this.ctx.lineTo(this.sizeMultiplier*(x3-this.x), this.sizeMultiplier*(y3-this.y)-(this.sizeMultiplier-1)*gameArea.canvas.height);
+            this.ctx.moveTo(this.sizeMultiplier*(x1-this.x), this.sizeMultiplier*(y1-this.y)+ this.verticalShift);
+            this.ctx.lineTo(this.sizeMultiplier*(x2-this.x), this.sizeMultiplier*(y2-this.y)+ this.verticalShift);
+            this.ctx.lineTo(this.sizeMultiplier*(x3-this.x), this.sizeMultiplier*(y3-this.y)+ this.verticalShift);
             this.ctx.fillStyle = color;
             this.ctx.fill();
         }
@@ -245,7 +298,7 @@ var gameArea = {
                     this.ctx.clip();
                 
                     this.ctx.fillStyle = color;
-                    this.ctx.fillRect(this.sizeMultiplier*(x - this.left.x), this.sizeMultiplier*(y - this.left.y)-(this.sizeMultiplier-1)*gameArea.canvas.height, this.sizeMultiplier*width, this.sizeMultiplier*height);
+                    this.ctx.fillRect(this.sizeMultiplier*(x - this.left.x), this.sizeMultiplier*(y - this.left.y)+ this.left.verticalShift, this.sizeMultiplier*width, this.sizeMultiplier*height);
                 this.ctx.restore();
             }
             if(x + width > this.right.x && x < this.right.x + (this.canvas.width/2)/this.sizeMultiplier){
@@ -255,13 +308,13 @@ var gameArea = {
                     this.ctx.clip();
                 
                     this.ctx.fillStyle = color;
-                    this.ctx.fillRect(this.canvas.width/2 + this.sizeMultiplier*(x - this.right.x), this.sizeMultiplier*(y - this.right.y)-(this.sizeMultiplier-1)*gameArea.canvas.height, this.sizeMultiplier*width, this.sizeMultiplier*height);
+                    this.ctx.fillRect(this.canvas.width/2 + this.sizeMultiplier*(x - this.right.x), this.sizeMultiplier*(y - this.right.y)+ this.right.verticalShift, this.sizeMultiplier*width, this.sizeMultiplier*height);
                 this.ctx.restore();
             }
         }
         else{
             this.ctx.fillStyle = color;
-            this.ctx.fillRect(this.sizeMultiplier*(x - this.x), this.sizeMultiplier*(y - this.y)-(this.sizeMultiplier-1)*gameArea.canvas.height, this.sizeMultiplier*width, this.sizeMultiplier*height);
+            this.ctx.fillRect(this.sizeMultiplier*(x - this.x), this.sizeMultiplier*(y - this.y)+ this.verticalShift, this.sizeMultiplier*width, this.sizeMultiplier*height);
         }
     },
     drawCirc : function(x, y, radius, color){
@@ -273,7 +326,7 @@ var gameArea = {
                     this.ctx.clip();
                     this.ctx.beginPath();
                     this.ctx.strokeStyle=color;
-                    this.ctx.arc(this.sizeMultiplier*(x - this.left.x), this.sizeMultiplier*(y - this.left.y)-(this.sizeMultiplier-1)*gameArea.canvas.height, this.sizeMultiplier*radius, 0, 2*Math.PI);
+                    this.ctx.arc(this.sizeMultiplier*(x - this.left.x), this.sizeMultiplier*(y - this.left.y)+ this.left.verticalShift, this.sizeMultiplier*radius, 0, 2*Math.PI);
                     this.ctx.stroke();
                 this.ctx.restore();
             }
@@ -284,7 +337,7 @@ var gameArea = {
                     this.ctx.clip();
                     this.ctx.beginPath();
                     this.ctx.strokeStyle=color;
-                    this.ctx.arc(this.canvas.width/2 + this.sizeMultiplier*(x - this.right.x), this.sizeMultiplier*(y - this.right.y)-(this.sizeMultiplier-1)*gameArea.canvas.height, this.sizeMultiplier*radius, 0, 2*Math.PI);
+                    this.ctx.arc(this.canvas.width/2 + this.sizeMultiplier*(x - this.right.x), this.sizeMultiplier*(y - this.right.y)+ this.right.verticalShift, this.sizeMultiplier*radius, 0, 2*Math.PI);
                     this.ctx.stroke();
                 this.ctx.restore();
             }
@@ -292,7 +345,7 @@ var gameArea = {
         else{
             this.ctx.beginPath();
             this.ctx.strokeStyle=color;
-            this.ctx.arc(this.sizeMultiplier*(x - this.x), this.sizeMultiplier*(y - this.y)-(this.sizeMultiplier-1)*gameArea.canvas.height, this.sizeMultiplier*radius, 0, 2*Math.PI);
+            this.ctx.arc(this.sizeMultiplier*(x - this.x), this.sizeMultiplier*(y - this.y)+ this.verticalShift, this.sizeMultiplier*radius, 0, 2*Math.PI);
             this.ctx.stroke();
         }
     },
@@ -302,21 +355,30 @@ var gameArea = {
         this.xveloc += this.xaccel + this.xaccelCtrl;
         this.yveloc += this.yaccel + this.yaccelCtrl;
 
-        if(toggleMap[51]){
-            if(Math.abs((player2.x + player2.width/2) - (player1.x + player1.width/2)) < this.canvas.width/this.sizeMultiplier){
+        if(toggleMap[51]){//Math.abs((player2.x + player2.width/2) - (player1.x + player1.width/2)) < this.canvas.width/this.sizeMultiplier
+            if(false){
                 this.splitScreen = false;
                 this.x = ((player1.x + player1.width/(2*this.sizeMultiplier) + player2.x + player2.width/(2*this.sizeMultiplier))/2 - this.canvas.width/(2*this.sizeMultiplier));
+                this.verticalShift = (1-this.sizeMultiplier)*this.canvas.height;
             }
             else{
-                this.splitScreen = true; //Don't forget to set it to false later
-                if(player1.x < player2.x){
-                    this.left.x = player1.x - this.canvas.width/(4*this.sizeMultiplier);
-                    this.right.x = player2.x  - this.canvas.width/(4*this.sizeMultiplier);
-                }
-                else{
-                    this.left.x = player2.x - this.canvas.width/(4*this.sizeMultiplier);
-                    this.right.x = player1.x  - this.canvas.width/(4*this.sizeMultiplier);
-                }
+                this.splitScreen = true;
+                this.left.x = player1.x - this.canvas.width/(4*this.sizeMultiplier);
+                this.left.y = player1.y + player1.height - 40;
+                this.right.x = player2.x  - this.canvas.width/(4*this.sizeMultiplier);
+                this.right.y = player2.y + player2.height - 40;
+                // if(player1.x < player2.x){ //Makes it so screens switch when players pass each other
+                //     this.left.x = player1.x - this.canvas.width/(4*this.sizeMultiplier);
+                //     this.left.y = player1.y; //FOR THE LOVE OF GOD FIX
+                //     this.right.x = player2.x  - this.canvas.width/(4*this.sizeMultiplier);
+                //     this.right.y = player2.y;
+                // }
+                // else{
+                //     this.left.x = player2.x - this.canvas.width/(4*this.sizeMultiplier);
+                //     this.left.y = player2.y;
+                //     this.right.x = player1.x  - this.canvas.width/(4*this.sizeMultiplier);
+                //     this.right.y = player1.y;
+                // }
                 this.x = ((player1.x + player1.width/2 + player2.x + player2.width/2)/2 - this.canvas.width/2);
             }
         }

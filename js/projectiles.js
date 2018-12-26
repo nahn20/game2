@@ -16,7 +16,7 @@ function shurikens(x, y, xveloc, yveloc, width, power, owner, theta, thetaVeloc)
     this.loop = function(){
         this.updatePos();
         this.draw();
-        this.damageCheck();
+        //this.damageCheck();
     }
     this.updatePos = function(){
         this.damageCheck();
@@ -24,7 +24,7 @@ function shurikens(x, y, xveloc, yveloc, width, power, owner, theta, thetaVeloc)
             this.x += this.xveloc;
             this.y += this.yveloc;
         }
-        else if(!(this.xveloc == 0 && this.yveloc == 0)){
+        else if(true){
             var xOrigin = 0;
             var yOrigin = 0; 
             var extension = 0;

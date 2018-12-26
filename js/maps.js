@@ -353,7 +353,7 @@ var flatGround = {
         collisionObjects.rectXVeloc[0] = 0;
     },
     updatePos : function(){
-        this.x = gameArea.x - 1000; //Sphaget
+        this.x = gameArea.x - 2000; //Sphaget
         this.width = gameArea.canvas.width/gameArea.sizeMultiplier + 100000;
         collisionObjects.rectX[0] = this.x;
         collisionObjects.rectY[0] = this.y;
