@@ -347,7 +347,7 @@ function player(){
         else if(this.x+this.width > mapBounds.righthardx){
             this.x = mapBounds.righthardx - this.width;
         }
-        this.objectCollisionCheck();
+        //this.objectCollisionCheck();
         this.xaccelSum = this.xaccel + this.xaccelCtrl;
         this.yaccelSum = this.yaccel + this.yaccelCtrl + this.gravity;
         this.xvelocBound += this.xaccelBound;
@@ -355,8 +355,51 @@ function player(){
         this.yveloc += this.yaccelSum;
         this.xvelocSum = this.xveloc + this.xvelocCtrl + this.platformpullxveloc;
         this.yvelocSum = this.yveloc + this.yvelocCtrl;
-        this.x += this.xvelocSum + this.xvelocBound;
-        this.y += this.yvelocSum;
+        // this.x += this.xvelocSum + this.xvelocBound;
+        // this.y += this.yvelocSum;
+
+        position = {
+            x : this.x,
+            y : this.y,
+            width : this.width,
+            height : this.height,
+            xveloc : this.xvelocSum,
+            yveloc : this.yvelocSum,
+        }
+        position = collisionCheck(position, 0);
+        this.x = position.xf;
+        this.y = position.yf;
+        this.platformpullxveloc = position.platformXVeloc;
+        this.onGround = position.onGround;
+        if(this.onGround){
+            this.jumpCount = 0;
+            this.yveloc = 0;
+        }
+        switch(position.collisionType){
+            case "hitCeiling":
+                if(this.yveloc < 0){
+                    this.yveloc = 0;
+                }
+                break;
+            case "hitRight":
+                if(this.xveloc > 0){
+                    this.xveloc = 0;
+                }
+                if(this.xvelocCtrl > 0){
+                    this.xvelocCtrl = 0;
+                }
+                break;
+            case "hitLeft":
+                if(this.xveloc < 0){
+                    this.xveloc = 0;
+                }
+                if(this.xvelocCtrl < 0){
+                    this.xvelocCtrl = 0;
+                }
+                break;
+        }
+
+
         if(this.width > this.widthveloc){
             this.width += this.widthveloc;
             this.x -= this.widthveloc/2;
@@ -386,7 +429,7 @@ function player(){
             //this.updatePvp();
         }
     }
-    this.objectCollisionCheck = function(){
+    this.objectCollisionCheck = function(){ //No longer in use
         var notOnGroundCount = 0;
         var posyVeloc = 0;
         if(this.yvelocSum > 0){
@@ -508,39 +551,51 @@ function player(){
             case "mage":
                 if(keyMap[this.controls[0]]){
                     if(gameArea.time - lastUpMap[this.controls[0]] < 200 && this.mana >= 20/((gameArea.time - lastUseMap[this.controls[0]])/200)){
-                        this.y -= 50;
-                        this.mana -= 20/((gameArea.time - lastUseMap[this.controls[0]])/200);
-                        lastUpMap[this.controls[0]] = gameArea.time + 200;
-                        lastUseMap[this.controls[0]] = gameArea.time;
-                        this.yveloc = -1.5;
+                        var position = {
+                            x : this.x,
+                            y : this.y - 50,
+                            width : this.width,
+                            height : this.height,
+                            xveloc : 0,
+                            yveloc : 0,
+                        }
+                        if(!collisionCheck(position, 1)){
+                            this.y -= 50;
+                            this.mana -= 20/((gameArea.time - lastUseMap[this.controls[0]])/200);
+                            lastUpMap[this.controls[0]] = gameArea.time + 200;
+                            lastUseMap[this.controls[0]] = gameArea.time;
+                            this.yveloc = -1.5;
+                        }
                     }
                     else if(this.onGround){
                         this.jump();
                     }
                 }
                 if(keyMap[this.controls[1]] && gameArea.time - lastUpMap[this.controls[1]] < 200 && this.mana >= 10){
-                    var q = true;
-                    for(i = 0; i < collisionObjects.rectX.length && q == true; i++){
-                        if(this.x - 50 + this.width > collisionObjects.rectX[i] && this.x - 50 < collisionObjects.rectX[i] + collisionObjects.rectWidth[i] + 1 && this.y + this.height > collisionObjects.rectY[i] && this.y < collisionObjects.rectY[i] + collisionObjects.rectHeight[i] && !collisionObjects.rectTransparency[i]){
-                            q = false;
-                            //this.x = collisionObjects.rectX[i] + collisionObjects.rectWidth[i]; //Doesn't work because each collision object of a large mass is independent. Maybe do another for loop inside of here?
-                        }
+                    var position = {
+                        x : this.x - 50,
+                        y : this.y,
+                        width : this.width,
+                        height : this.height,
+                        xveloc : 0,
+                        yveloc : 0,
                     }
-                    if(q){
+                    if(!collisionCheck(position, 1)){
                         this.x -= 50;
                         this.mana -= 10;
                     }
                     lastUpMap[this.controls[1]] = gameArea.time + 200;
                 }
                 if(keyMap[this.controls[2]] && gameArea.time - lastUpMap[this.controls[2]] < 200 && this.mana >= 10){
-                    var q = true;
-                    for(i = 0; i < collisionObjects.rectX.length && q == true; i++){
-                        if(this.x + 50 + this.width > collisionObjects.rectX[i] && this.x + 50 < collisionObjects.rectX[i] + collisionObjects.rectWidth[i] + 1 && this.y + this.height > collisionObjects.rectY[i] && this.y < collisionObjects.rectY[i] + collisionObjects.rectHeight[i] && !collisionObjects.rectTransparency[i]){
-                            q = false;
-                            //this.x = collisionObjects.rectX[i] - this.width; //Doesn't work because each collision object of a large mass is independent. Maybe do another for loop inside of here?
-                        }
+                    var position = {
+                        x : this.x + 50,
+                        y : this.y,
+                        width : this.width,
+                        height : this.height,
+                        xveloc : 0,
+                        yveloc : 0,
                     }
-                    if(q){
+                    if(!collisionCheck(position, 1)){
                         this.x += 50;
                         this.mana -= 10;
                     }

@@ -160,34 +160,7 @@ var worldBuilder = {
 var worldFileTestCheckBox = {
     initialSetup : function(){
         worlds.flatGround = true;
-        var array = [];
-        for(y = 0; y < testMap.height; y++){
-            for(x = 0; x < testMap.width; x++){
-                //console.log(testMap.map.charAt(x+y*testMap.width));
-                var key = testMap.map.charAt(x+y*testMap.width);
-                if(key != " "){
-                    var width = testMap.blockSize;
-                    var xPos = x*width;
-                    var yPos = 140-width*testMap.height+y*width;
-                    switch(key){
-                        case "x":
-                            block.new(xPos, yPos, width, width, 0, 0, "black", false);
-                            break;
-                        case "1":
-                            player1.x = xPos; //Fix position things
-                            player1.y = yPos - player1.height;
-                            break;
-                        case "1":
-                            player2.x = xPos;
-                            player2.y = yPos;
-                            break;
-                        
-                    }
-
-
-                }
-            }
-        }
+        loadMap(testMap.map, testMap.width, testMap.height, testMap.blockSize);
     },
 }
 var fire = {
