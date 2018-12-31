@@ -319,7 +319,7 @@ var arena2 = {
 }
 var testyTest = {
     initialSetup : function(){
-        dragoon.new(0, -1000, 100);
+        dragoon.new(0, -600, 100);
         gameArea.sizeMultiplier = 0.04;
         
     },

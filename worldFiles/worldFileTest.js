@@ -33,5 +33,5 @@ var testMap = {
     'n',
     width : 60,
     height : 30,
-    blockSize : 6,
+    blockSize : 1,
 }

@@ -513,31 +513,73 @@ function player(){
         }
     }
     this.findNoteworthyItems = function(){ //Generates an array of coordinates with weights for camera follow to use when adjusting size and position.
+        ui.testVar(this.x)
         var objects = {
             x : [this.x + this.width/2],
             y : [this.y + this.height/2],
-            weight : [0.8],
+            weight : [1],
+            screenSize : 3.6,
         }
-        if(this.playerNumber == 1){
-            if(Math.abs((player2.x + player2.width/2)-(this.x + this.width/2)) < 100 && Math.abs((player2.y + player2.height/2)-(this.y + this.height/2)) < 50){
-                objects.x[1] = player2.x + player2.width/2;
-                objects.y[1] = player2.y + player2.height/2;
-                objects.weight[1] = 0.2;
+        var idealSizeCounters = [0, 0, 0, 0, 0]; //In order from largest to smallest
+
+        // if(this.playerNumber == 1){
+        //     if(Math.abs((player2.x + player2.width/2)-(this.x + this.width/2)) < 100 && Math.abs((player2.y + player2.height/2)-(this.y + this.height/2)) < 50){
+        //         objects.x[1] = player2.x + player2.width/2;
+        //         objects.y[1] = player2.y + player2.height/2;
+        //         objects.weight[1] = 0.2;
+        //     }
+        // }
+        // if(this.playerNumber == 2){
+        //     if(Math.abs((player1.x + player1.width/2)-(this.x + this.width/2)) < 100 && Math.abs((player1.y + player1.height/2)-(this.y + this.height/2)) < 50){
+        //         objects.x[1] = player1.x + player1.width/2;
+        //         objects.y[1] = player1.y + player1.height/2;
+        //         objects.weight[1] = 0.2;
+        //     }
+        // }
+        for(i = -1; i < enemyCollision.x.length; i++){
+            var weightCount = 1;
+            if(i == -1){
+                if(this.playerNumber == 1){
+                    var enemy = {deltaX : Math.abs(player2.x + player2.width/2 - (this.x + this.width/2)), deltaY : Math.abs(player2.y + player2.height/2 - (this.y + this.height/2))};
+                }
+                if(this.playerNumber == 2){
+                    var enemy = {deltaX : Math.abs(player1.x + player1.width/2 - (this.x + this.width/2)), deltaY : Math.abs(player1.y + player1.height/2 - (this.y + this.height/2))};
+                }
+                weightCount = 1;
             }
             else{
-                objects.weight[0] = 1; //FIX
+                var enemy = {deltaX : Math.abs(enemyCollision.x[i] + enemyCollision.width[i]/2 - (this.x + this.width/2)), deltaY : Math.abs(enemyCollision.y[i] + enemyCollision.height[i]/2 - (this.y + this.height/2))}
+            }
+            if(enemy.deltaX < 950){
+                if(enemy.deltaX > 600 || enemy.deltaY > 300){
+                    idealSizeCounters[0] += weightCount;
+                }
+                else if(enemy.deltaX > 330 || enemy.deltaY > 165){
+                    idealSizeCounters[1] += weightCount;
+                }
+                else if(enemy.deltaX > 220 || enemy.deltaY > 110){
+                    idealSizeCounters[2] += weightCount;
+                }
+                else if(enemy.deltaX > 60 || enemy.deltaY > 30){
+                    idealSizeCounters[3] += weightCount;
+                }
+                else{
+                    idealSizeCounters[4] += weightCount;
+                }
+                
             }
         }
-        if(this.playerNumber == 2){
-            if(Math.abs((player1.x + player1.width/2)-(this.x + this.width/2)) < 100 && Math.abs((player1.y + player1.height/2)-(this.y + this.height/2)) < 50){
-                objects.x[1] = player1.x + player1.width/2;
-                objects.y[1] = player1.y + player1.height/2;
-                objects.weight[1] = 0.2;
-            }
-            else{
-                objects.weight[0] = 1; //FIX
+        var weightedHighest = 4;
+        var totalEnemiesInRange = idealSizeCounters.reduce(function(a, b){return a + b;}, 0);
+        for(i = weightedHighest-1; i >= 0; i--){
+            if(idealSizeCounters[i] > idealSizeCounters[weightedHighest] + totalEnemiesInRange/8){
+                weightedHighest = i;
             }
         }
+        ui.testVar(weightedHighest)
+        //var screenSizeTable = [0.3, 0.48, 0.85, 1.2, 3.6];
+        var screenSizeTable = [1.2, 1.2, 1.2, 1.2, 3.6]
+        objects.screenSize = screenSizeTable[weightedHighest];
         return objects;
     }
     this.move = function(){
