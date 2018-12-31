@@ -353,7 +353,7 @@ function player(){
         this.xvelocBound += this.xaccelBound;
         this.xveloc += this.xaccelSum;
         this.yveloc += this.yaccelSum;
-        this.xvelocSum = this.xveloc + this.xvelocCtrl + this.platformpullxveloc;
+        this.xvelocSum = this.xveloc + this.xvelocCtrl + this.platformpullxveloc + this.xvelocBound;
         this.yvelocSum = this.yveloc + this.yvelocCtrl;
         // this.x += this.xvelocSum + this.xvelocBound;
         // this.y += this.yvelocSum;
@@ -511,6 +511,34 @@ function player(){
         if(notOnGroundCount == collisionObjects.rectX.length + collisionObjects.triX1.length){
             this.onGround = false;
         }
+    }
+    this.findNoteworthyItems = function(){ //Generates an array of coordinates with weights for camera follow to use when adjusting size and position.
+        var objects = {
+            x : [this.x + this.width/2],
+            y : [this.y + this.height/2],
+            weight : [0.8],
+        }
+        if(this.playerNumber == 1){
+            if(Math.abs((player2.x + player2.width/2)-(this.x + this.width/2)) < 100 && Math.abs((player2.y + player2.height/2)-(this.y + this.height/2)) < 50){
+                objects.x[1] = player2.x + player2.width/2;
+                objects.y[1] = player2.y + player2.height/2;
+                objects.weight[1] = 0.2;
+            }
+            else{
+                objects.weight[0] = 1; //FIX
+            }
+        }
+        if(this.playerNumber == 2){
+            if(Math.abs((player1.x + player1.width/2)-(this.x + this.width/2)) < 100 && Math.abs((player1.y + player1.height/2)-(this.y + this.height/2)) < 50){
+                objects.x[1] = player1.x + player1.width/2;
+                objects.y[1] = player1.y + player1.height/2;
+                objects.weight[1] = 0.2;
+            }
+            else{
+                objects.weight[0] = 1; //FIX
+            }
+        }
+        return objects;
     }
     this.move = function(){
         if(keyMap[this.controls[1]]){
