@@ -3,7 +3,7 @@ function startGame(){
     gameArea.start();
     player1 = new player();
     player2 = new player();
-    player1.initialSetup(1, "ninja");
+    player1.initialSetup(1, "mage");
     player2.initialSetup(2, "mage");
     arrow.initialSetup();
     dragoon.initialSetup();
@@ -341,6 +341,7 @@ var gameArea = {
         if(toggleMap[51]){//Math.abs((player2.x + player2.width/2) - (player1.x + player1.width/2)) < this.canvas.width/this.sizeMultiplier
             var dpx = 0; //Desired Position
             var dpy = 0;
+            var dps = 0;
             if(false){
                 this.splitScreen = false;
                 dpx = ((player1.x + player1.width/(2*this.sizeMultiplier) + player2.x + player2.width/(2*this.sizeMultiplier))/2 - this.canvas.width/(2*this.sizeMultiplier));
@@ -349,6 +350,8 @@ var gameArea = {
             }
             else{
                 this.splitScreen = true;
+                ui.testVar("Left Size Mult " + this.left.sizeMultiplier);
+                ui.testVar("Right Size Mult " + this.right.sizeMultiplier);
 
                 dpx = 0;
                 dpy = 0;
@@ -361,13 +364,12 @@ var gameArea = {
                 this.left.x += 0.1*(dpx - this.left.x);
                 dpy -= 10;
                 this.left.y += 0.05*(dpy - this.left.y);
-                if(keyMap[38] || keyMap[40] || Math.abs(importantItems.screenSize-this.left.sizeMultiplier) > 0.05){ //Potato solution to moving screen while shrinking/widening problem
+
+                if(keyMap[38] || keyMap[40] || Math.abs(dps-this.left.sizeMultiplier) > 0.05){ //Potato solution to moving screen while shrinking/widening problem
                     this.left.x = dpx;
+                    this.left.y = dpy;
                 }
-                else{
-                    ui.testVar("Following")
-                }
-                this.left.sizeMultiplier += 0.03*(importantItems.screenSize - this.left.sizeMultiplier);
+                //this.left.sizeMultiplier += 0.03*(importantItems.screenSize - this.left.sizeMultiplier); //Include if using the account for all enemies resizer
 
                 dpx = 0;
                 dpy = 0;
@@ -380,10 +382,10 @@ var gameArea = {
                 this.right.x += 0.1*(dpx - this.right.x);
                 dpy -= 10;
                 this.right.y += 0.05*(dpy - this.right.y);
-                if(keyMap[38] || keyMap[40] || Math.abs(importantItems.screenSize-this.right.sizeMultiplier) > 0.05){ //Potato solution to moving screen while shrinking/widening problem
+                if(keyMap[38] || keyMap[40]){ //Potato solution to moving screen while shrinking/widening problem
                     this.right.x = dpx;
                 }
-                //this.right.sizeMultiplier += 0.03*(importantItems.screenSize - this.right.sizeMultiplier);
+                //this.right.sizeMultiplier += 0.03*(importantItems.screenSize - this.right.sizeMultiplier); //Include if using the account for all enemies resizer
             }
         }
         if(this.splitScreen){
@@ -430,8 +432,6 @@ var gameArea = {
                     }
                 }
             }
-        ui.testVar(gameArea.left.sizeMultiplier) //Delete me
-        ui.testVar(gameArea.right.sizeMultiplier)
         }
     },
     move : function(){

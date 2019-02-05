@@ -1,37 +1,37 @@
 var testMap = {
     map : 
-    '                    xxxxxxxxxxxxxxx              xxxxxxxxxxx'+
-    '                    xxxxxxxxxxxxxxx              xxxxxxxxxxx'+
-    '                    xxxxxxxxxxxxxxx              xxxxxxxxxxx'+
-    '                    xxxxxxxxxxxxxxx              xxxxxxxxxxx'+
-    '                    xxxxxxxxxxxxxxx              xxxxxxxxxxx'+
-    '                    xxxxxxxxxxxxxxx              xxxxxxxxxxx'+
-    '                    xxxxxxxxxxxxxxx              xxxxxxxxxxx'+
-    '                    xxxxxxxxxxxxxxx              xxxxxxxxxxx'+
-    '                    xxxxxxxxxxxxxxx              xxxxxxxxxxx'+
-    '                    xxxxxxxxxxxxxxx              xxxxxxxxxxx'+
-    '                    xxxxxxxxxxxxxxx              xxxxxxxxxxx'+
-    '                    xxxxxxxxxxxxxxx              xxxxxxxxxxx'+
-    '                    xxxxxxxxxxxxxxx              xxxxxxxxxxx'+
-    '                                                 xxxxxxxxxxx'+
-    '                                                 xxxxxxxxxxx'+
-    '                                                 xxxxxxxxxxx'+
-    '                                                 xxxxxxxxxxx'+
-    '                    xxxxxxxxxxxxxxx              xxxxxxxxxxx'+
-    '                    xxxxxxxxxxxxxxx              xxxxxxxxxxx'+
-    '            2       xxxxxxxxxxxxxxx              xxxxxxxxxxx'+
-    '               x x  xxxxxxxxxxxxxxx              xxxxxxxxxxx'+ 
-    ' 1          x  x    xxxxxxxxxxxxxxxx            xxxxxxxxxxxx'+ 
-    '       x            xxxxxxxxxxxxxxxxx          xxxxxxxxxxxxx'+ 
-    'xxx                 xxxxxxxxxxxxxxxxxx        xxxxxxxxxxxxxx'+ 
-    'xxx                 xxxxxxxxxxxxxxxxxxx      xxxxxxxxxxxxxxx'+
-    '               x x  xxxxxxxxxxxxxxxxxxxx    xxxxxxxxxxxxxxxx'+ 
-    '            x  x    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'+ 
-    '       x            xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'+ 
-    'xxx                 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'+ 
-    'xxx                 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'+
+    '                    xxxxxxxxxxxxxxx              xxxxxxxxxxx                                                                                                                                                                                    '+
+    '                    xxxxxxxxxxxxxxx              xxxxxxxxxxx                                                                                                                                                                                    '+
+    '        x           xxxxxxxxxxxxxxx              xxxxxxxxxxx                                                                                                                                                                                    '+
+    '       xxx          xxxxxxxxxxxxxxx              xxxxxxxxxxx                                                                                                                                                                                    '+
+    '        x           xxxxxxxxxxxxxxx              xxxxxxxxxxx                                                                                                                                                                                    '+
+    '                    xxxxxxxxxxxxxxx              xxxxxxxxxxx                                                                                                                                                                                    '+
+    '                    xxxxxxxxxxxxxxx              xxxxxxxxxxx                                                                                                                                                                                    '+
+    '                    xxxxxxxxxxxxxxx              xxxxxxxxxxx                                                                                                                                                                                    '+
+    '                    xxxxxxxxxxxxxxx              xxxxxxxxxxx                                                                                                                                                                                    '+
+    '                    xxxxxxxxxxxxxxx              xxxxxxxxxxx                                                                                                                                                                                    '+
+    '                    xxxxxxxxxxxxxxx              xxxxxxxxxxx                                                                                                                                                                                    '+
+    '                    xxxxxxxxxxxxxxx              xxxxxxxxxxx                                                                                                                                                                                    '+
+    '                    xxxxxxxxxxxxxxx              xxxxxxxxxxx                                                                                                                                                                                    '+
+    '                                                 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx     xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'+
+    '                                                 xxxxxxxxxxx                                                                                                                                                                                    '+
+    '       ssssss                                    xxxxxxxxxxx                                                                                                                                                                                    '+
+    '                                                 xxxxxxxxxxx                                                                                                                                                                                    '+
+    '                    xxxxxxxxxxxxxxx              xxxxxxxxxxx                                                                                                                                                                                    '+
+    '                    xxxxxxxxxxxxxxx              xxxxxxxxxxx                                                                                                                                                                                    '+
+    '                    xxxxxxxxxxxxxxx              xxxxxxxxxxx                                                                                                                                                                                    '+
+    '               x x  xxxxxxxxxxxxxxx              xxxxxxxxxxx                                                                                                                                                                                    '+ 
+    ' q1         x  x    xxxxxxxxxxxxxxxx            xxxxxxxxxxxx                                                                                                                                                                                    '+ 
+    '       x            xxxxxxxxxxxxxxxxx          xxxxxxxxxxxxx         xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx                                                                                                                                       '+ 
+    'xxx                 xxxxxxxxxxxxxxxxxx        xxxxxxxxxxxxxx         x                                  x                                                                                                                                       '+ 
+    'xxx                 xxxxxxxxxxxxxxxxxxx      xxxxxxxxxxxxxxx         x    ssssssssssssssssssss          x                                                                                                                                       '+
+    '               x x  xxxxxxxxxxxxxxxxxxxx    xxxxxxxxxxxxxxxx         x      o                           x                                                                                                                                       '+ 
+    '            x  x    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx         x      o                   q2                                                                                                                                              '+ 
+    '       x            xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx         x      o    ooooooooo                                                                                                                                                      '+ 
+    'xxx                 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx         x      ooo   o     o                                                                                                                                                       '+ 
+    'xxx                 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx         x      o o   o     o                                                                                                                                                       '+
     'n',
-    width : 60,
+    width : 240,
     height : 30,
-    blockSize : 1,
+    blockSize : 6,
 }

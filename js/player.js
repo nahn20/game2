@@ -513,10 +513,9 @@ function player(){
         }
     }
     this.findNoteworthyItems = function(){ //Generates an array of coordinates with weights for camera follow to use when adjusting size and position.
-        ui.testVar(this.x)
         var objects = {
             x : [this.x + this.width/2],
-            y : [this.y + this.height/2],
+            y : [this.y + this.height],
             weight : [1],
             screenSize : 3.6,
         }
@@ -526,16 +525,18 @@ function player(){
         //     if(Math.abs((player2.x + player2.width/2)-(this.x + this.width/2)) < 100 && Math.abs((player2.y + player2.height/2)-(this.y + this.height/2)) < 50){
         //         objects.x[1] = player2.x + player2.width/2;
         //         objects.y[1] = player2.y + player2.height/2;
-        //         objects.weight[1] = 0.2;
+        //         objects.weight[1] = 0;
         //     }
         // }
         // if(this.playerNumber == 2){
         //     if(Math.abs((player1.x + player1.width/2)-(this.x + this.width/2)) < 100 && Math.abs((player1.y + player1.height/2)-(this.y + this.height/2)) < 50){
         //         objects.x[1] = player1.x + player1.width/2;
         //         objects.y[1] = player1.y + player1.height/2;
-        //         objects.weight[1] = 0.2;
+        //         objects.weight[1] = 0;
         //     }
         // }
+
+        /* //Counts in all enemies to go to different size threshold amounts
         for(i = -1; i < enemyCollision.x.length; i++){
             var weightCount = 1;
             if(i == -1){
@@ -566,7 +567,6 @@ function player(){
                 else{
                     idealSizeCounters[4] += weightCount;
                 }
-                
             }
         }
         var weightedHighest = 4;
@@ -577,9 +577,10 @@ function player(){
             }
         }
         ui.testVar(weightedHighest)
-        //var screenSizeTable = [0.3, 0.48, 0.85, 1.2, 3.6];
-        var screenSizeTable = [1.2, 1.2, 1.2, 1.2, 3.6]
+        var screenSizeTable = [0.3, 0.48, 0.85, 1.2, 3.6];
+        //var screenSizeTable = [1.2, 1.2, 1.2, 1.2, 3.6]
         objects.screenSize = screenSizeTable[weightedHighest];
+        */
         return objects;
     }
     this.move = function(){

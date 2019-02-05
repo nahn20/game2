@@ -149,7 +149,7 @@ var slime = {
     },
     updatePos : function(){
         this.slimeMovement();
-        for(i = 0; i < this.x.length; i++){
+        for(var i = 0; i < this.x.length; i++){
             if(this.health[i] > 0){
                 if(this.health[i] > 2*this.maxHealth[i]/3){
                     this.animationFrame[i] = 0;
@@ -160,9 +160,39 @@ var slime = {
                 else{
                     this.animationFrame[i] = 2;
                 }
-                this.x[i] += this.xveloc[i];
-                this.y[i] += this.yveloc[i]; 
                 this.yveloc[i] += this.gravity[i]; 
+                var position = {
+                    x : this.x[i],
+                    y : this.y[i],
+                    width : this.width[i],
+                    height : this.height[i],
+                    xveloc : this.xveloc[i],
+                    yveloc : this.yveloc[i],
+                }
+                position = collisionCheck(position, 0);
+                this.x[i] = position.xf;
+                this.y[i] = position.yf;
+                this.onGround[i] = position.onGround;
+                if(this.onGround[i]){
+                    this.yveloc[i] = 0;
+                }
+                switch(position.collisionType){
+                    case "hitCeiling":
+                        if(this.yveloc[i] < 0){
+                            this.yveloc[i] = 0;
+                        }
+                        break;
+                    case "hitRight":
+                        if(this.xveloc[i] > 0){
+                            this.xveloc[i] = 0;
+                        }
+                        break;
+                    case "hitLeft":
+                        if(this.xveloc[i] < 0){
+                            this.xveloc[i] = 0;
+                        }
+                        break;
+                }
                 if(gameArea.time - enemyCollision.lastHitTime[this.arrayPosition[i]] >= 20 && this.state[i] == 1){
                     this.state[i] = 0;
                 }
@@ -173,7 +203,7 @@ var slime = {
             enemyCollision.height[this.arrayPosition[i]] = this.height[i];
         }
 
-        this.objectStandingCheck();
+        //this.objectStandingCheck();
     },
     draw : function(){
         for(i = 0; i < this.x.length; i++){
@@ -235,7 +265,7 @@ var slime = {
             if(Math.random() > 0.6 && this.onGround[i]){
                 this.xveloc[i] = 3 * (Math.random() - 0.5);
                 this.yveloc[i] = 0; //Get rid of this for different style of jumping
-                this.gravity[i] = Math.random() * -2.6;
+                this.gravity[i] = Math.random() * -3.5;
                 setTimeout(function(i){
                     slime.gravity[i] = 0.2;
                 }, 20, i);

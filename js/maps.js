@@ -228,7 +228,7 @@ var arena1 = {
     initialSetup : function(){
         gameArea.backgroundImage.src = "images/backgrounds/woods.png";
         //toggleMap[52] = false;
-        flatGround.shown = false;
+        flatGround.shown = true;
         flatGround.y = 138;
         mapBounds.initialSetup(-250, 250);
         mapBounds.hardBoundsSetup(-300, 300)
@@ -265,7 +265,7 @@ var arena2 = {
     initialSetup : function(){
         gameArea.backgroundImage.src = "images/backgrounds/woods.png";
         //toggleMap[52] = false;
-        flatGround.shown = false;
+        flatGround.shown = true;
         flatGround.y = 138;
         mapBounds.initialSetup(-250, 250);
         mapBounds.hardBoundsSetup(-300, 300)

@@ -57,9 +57,7 @@
             Flappy World: <input type="checkbox" id="flappyCheckBox" onclick="flappyCheck()">
             <br>TODO:
             <li>
-                <ul>Add nearby enemies into weight accounting of findNoteworthyItems()</ul>
-                <ul>Make sizeMultiplier account for findNoteworthyItems()</ul>
-                <ul>Fix collision<br><img src="images/todo/collision.png" width="480px" height="300px"></ul>
+                <ul>Fix collision. Change collisionType to an array which contains multiple types (like onScreen() in gameArea). Note problem of person sticking to celing when jumping into a corner. Not rendering as hitceiling, changing should fix<br><img src="images/todo/collision.png" width="480px" height="300px"></ul>
                 <ul>Fix big together screen. Since zoomed so close everything get bad</ul>
                 <ul>Shurikens don't display</ul>
                 <ul>Fix health and mana bars</ul>
@@ -69,7 +67,10 @@
                 <ul>Add archer</ul>
                 <ul>Ask DGries how "if(condition1 == true && condition2 == true)" works. Does it evaluate condition2 in js? If so, look at gameArea.onScreen and rewrite.</ul>
                 <ul>Fix potato solution of screen zooming in weird</ul>
+                <ul>Add nearby enemies into weight accounting of findNoteworthyItems()</ul>
+                <ul>Make sizeMultiplier account for findNoteworthyItems()</ul>
                 <ul>Fix dragon: Not working because bad rotation, probably same fix as shurikens</ul>
+                <ul>Jumping on slime makes you bounce up with same velocity</ul>
             </li>
         </div>
     </body>

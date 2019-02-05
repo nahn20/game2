@@ -13,7 +13,7 @@ function collisionCheck(pos, parameter){ //Requires x, y, width, height, xveloc,
             platformXVeloc : 0,
             collisionType : "null",
         }
-        for(i = 0; i < collisionObjects.rectX.length; i++){
+        for(var i = 0; i < collisionObjects.rectX.length; i++){
             pos.x1o = pos.x; 
             pos.x2o = pos.x1o + pos.width;
             pos.y1o = pos.y;
@@ -41,12 +41,6 @@ function collisionCheck(pos, parameter){ //Requires x, y, width, height, xveloc,
                 || (pos.y1 == posObject.y1 && pos.y2 == posObject.y2)){ //If same height and inside each other
                     currentCollide.y = true;
                 }
-                if(pos.y2o <= posObject.y1 && currentCollide.x){
-                    pos.y1 = posObject.y1 - pos.height;
-                    position.onGround = true;
-                    position.platformXVeloc = collisionObjects.rectXVeloc[i];
-                    position.collisionType = "onGround";
-                }
                 if(pos.y1o >= posObject.y2 && currentCollide.x){
                     pos.y1 = posObject.y2;
                     position.collisionType = "hitCeiling";
@@ -58,6 +52,12 @@ function collisionCheck(pos, parameter){ //Requires x, y, width, height, xveloc,
                 if(pos.x1o >= posObject.x2 && currentCollide.y){
                     pos.x1 = posObject.x2;
                     position.collisionType = "hitLeft";
+                }
+                if(pos.y2o <= posObject.y1 && currentCollide.x){
+                    pos.y1 = posObject.y1 - pos.height;
+                    position.onGround = true;
+                    position.platformXVeloc = collisionObjects.rectXVeloc[i];
+                    position.collisionType = "onGround";
                 }
                 if(currentCollide.x && currentCollide.y){ //Dealing with stuck in block
                     if(pos.x1+(pos.x1+pos.x2)/2 > posObject.x1+(posObject.x1+posObject.x2)/2){
